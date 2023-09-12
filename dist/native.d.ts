@@ -2,6 +2,7 @@ type HUDType = "success" | "error" | "progress" | "label";
 interface NativeMethods {
     closeApp(): Promise<Boolean>;
     navigateTo(page: String, title?: String): Promise<Boolean>;
+    openWeb(url: String): Promise<Boolean>;
     writeFile(filename: String, data: Number[]): Promise<Boolean>;
     readFile(filename: String): Promise<Number[]>;
     listFiles(path: String): Promise<String[]>;

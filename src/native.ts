@@ -4,6 +4,7 @@ interface NativeMethods {
   // navigate
   closeApp(): Promise<Boolean>;
   navigateTo(page: String, title?: String): Promise<Boolean>;
+  openWeb(url: String): Promise<Boolean>;
   // file
   writeFile(filename: String, data: Number[]): Promise<Boolean>;
   readFile(filename: String): Promise<Number[]>;
@@ -85,7 +86,19 @@ window.InitMinipNative = function (): Promise<void> {
               })
             })
           },
-
+          openWeb(url) {
+            return new Promise<Boolean>((resolve, reject) => {
+              bridge.callHandler("openWeb", {
+                url
+              }, (res: Boolean) => {
+                if (res) {
+                  resolve(res)
+                } else {
+                  reject()
+                }
+              })
+            })
+          },
           writeFile(filename, data) {
             return new Promise<Boolean>((resolve, reject) => {
               bridge.callHandler("writeFile", {

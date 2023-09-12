@@ -55,6 +55,20 @@ window.InitMinipNative = function () {
                             });
                         });
                     },
+                    openWeb(url) {
+                        return new Promise((resolve, reject) => {
+                            bridge.callHandler("openWeb", {
+                                url
+                            }, (res) => {
+                                if (res) {
+                                    resolve(res);
+                                }
+                                else {
+                                    reject();
+                                }
+                            });
+                        });
+                    },
                     writeFile(filename, data) {
                         return new Promise((resolve, reject) => {
                             bridge.callHandler("writeFile", {
