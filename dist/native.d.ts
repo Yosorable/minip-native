@@ -3,6 +3,7 @@ interface NativeMethods {
     closeApp(): Promise<Boolean>;
     navigateTo(page: String, title?: String): Promise<Boolean>;
     openWeb(url: String): Promise<Boolean>;
+    playVideo(url: String): Promise<Boolean>;
     writeFile(filename: String, data: Number[]): Promise<Boolean>;
     readFile(filename: String): Promise<Number[]>;
     listFiles(path: String): Promise<String[]>;
@@ -14,6 +15,10 @@ interface NativeMethods {
     setKVStore(key: String, val: String): Promise<Boolean>;
     getKVStore(key: String): Promise<String>;
     delKVStore(key: String): Promise<Boolean>;
+    enableRefreshControl(): Promise<Boolean>;
+    disableRefreshControl(): Promise<Boolean>;
+    startRefresh(): Promise<Boolean>;
+    endRefresh(): Promise<Boolean>;
 }
 declare interface Window {
     MinipNative: NativeMethods;

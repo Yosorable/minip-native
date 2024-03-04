@@ -69,6 +69,20 @@ window.InitMinipNative = function () {
                             });
                         });
                     },
+                    playVideo(url) {
+                        return new Promise((resolve, reject) => {
+                            bridge.callHandler("playVideo", {
+                                url
+                            }, (res) => {
+                                if (res) {
+                                    resolve(res);
+                                }
+                                else {
+                                    reject();
+                                }
+                            });
+                        });
+                    },
                     writeFile(filename, data) {
                         return new Promise((resolve, reject) => {
                             bridge.callHandler("writeFile", {
@@ -220,6 +234,54 @@ window.InitMinipNative = function () {
                             bridge.callHandler("delKVStore", {
                                 key
                             }, (res) => {
+                                if (res) {
+                                    resolve(res);
+                                }
+                                else {
+                                    reject();
+                                }
+                            });
+                        });
+                    },
+                    enableRefreshControl() {
+                        return new Promise((resolve, reject) => {
+                            bridge.callHandler("enableRefreshControl", (res) => {
+                                if (res) {
+                                    resolve(res);
+                                }
+                                else {
+                                    reject();
+                                }
+                            });
+                        });
+                    },
+                    disableRefreshControl() {
+                        return new Promise((resolve, reject) => {
+                            bridge.callHandler("disableRefreshControl", (res) => {
+                                if (res) {
+                                    resolve(res);
+                                }
+                                else {
+                                    reject();
+                                }
+                            });
+                        });
+                    },
+                    startRefresh() {
+                        return new Promise((resolve, reject) => {
+                            bridge.callHandler("startRefresh", (res) => {
+                                if (res) {
+                                    resolve(res);
+                                }
+                                else {
+                                    reject();
+                                }
+                            });
+                        });
+                    },
+                    endRefresh() {
+                        return new Promise((resolve, reject) => {
+                            bridge.callHandler("endRefresh", (res) => {
                                 if (res) {
                                     resolve(res);
                                 }

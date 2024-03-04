@@ -5,6 +5,7 @@ interface NativeMethods {
   closeApp(): Promise<Boolean>;
   navigateTo(page: String, title?: String): Promise<Boolean>;
   openWeb(url: String): Promise<Boolean>;
+  playVideo(url: String): Promise<Boolean>;
   // file
   writeFile(filename: String, data: Number[]): Promise<Boolean>;
   readFile(filename: String): Promise<Number[]>;
@@ -21,6 +22,11 @@ interface NativeMethods {
   setKVStore(key: String, val: String): Promise<Boolean>;
   getKVStore(key: String): Promise<String>;
   delKVStore(key: String): Promise<Boolean>;
+  // refresh control
+  enableRefreshControl(): Promise<Boolean>;
+  disableRefreshControl(): Promise<Boolean>;
+  startRefresh(): Promise<Boolean>;
+  endRefresh(): Promise<Boolean>;
 }
 
 declare interface Window {
@@ -89,6 +95,19 @@ window.InitMinipNative = function (): Promise<void> {
           openWeb(url) {
             return new Promise<Boolean>((resolve, reject) => {
               bridge.callHandler("openWeb", {
+                url
+              }, (res: Boolean) => {
+                if (res) {
+                  resolve(res)
+                } else {
+                  reject()
+                }
+              })
+            })
+          },
+          playVideo(url) {
+            return new Promise<Boolean>((resolve, reject) => {
+              bridge.callHandler("playVideo", {
                 url
               }, (res: Boolean) => {
                 if (res) {
@@ -245,6 +264,51 @@ window.InitMinipNative = function (): Promise<void> {
               bridge.callHandler("delKVStore", {
                 key
               }, (res: Boolean) => {
+                if (res) {
+                  resolve(res)
+                } else {
+                  reject()
+                }
+              })
+            })
+          },
+
+          enableRefreshControl() {
+            return new Promise<Boolean>((resolve, reject) => {
+              bridge.callHandler("enableRefreshControl", (res: Boolean) => {
+                if (res) {
+                  resolve(res)
+                } else {
+                  reject()
+                }
+              })
+            })
+          },
+          disableRefreshControl() {
+            return new Promise<Boolean>((resolve, reject) => {
+              bridge.callHandler("disableRefreshControl", (res: Boolean) => {
+                if (res) {
+                  resolve(res)
+                } else {
+                  reject()
+                }
+              })
+            })
+          },
+          startRefresh() {
+            return new Promise<Boolean>((resolve, reject) => {
+              bridge.callHandler("startRefresh", (res: Boolean) => {
+                if (res) {
+                  resolve(res)
+                } else {
+                  reject()
+                }
+              })
+            })
+          },
+          endRefresh() {
+            return new Promise<Boolean>((resolve, reject) => {
+              bridge.callHandler("endRefresh", (res: Boolean) => {
                 if (res) {
                   resolve(res)
                 } else {
