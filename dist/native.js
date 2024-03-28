@@ -40,6 +40,18 @@ window.InitMinipNative = function () {
                             });
                         });
                     },
+                    showAppDetail() {
+                        return new Promise((resolve, reject) => {
+                            bridge.callHandler("showAppDetail", null, (res) => {
+                                if (res) {
+                                    resolve(res);
+                                }
+                                else {
+                                    reject();
+                                }
+                            });
+                        });
+                    },
                     navigateTo(page, title) {
                         return new Promise((resolve, reject) => {
                             bridge.callHandler("navigateTo", {
@@ -291,6 +303,40 @@ window.InitMinipNative = function () {
                             });
                         });
                     },
+                    selectPhoto() {
+                        return new Promise((resolve, reject) => {
+                            bridge.callHandler("selectPhoto", (res) => {
+                                if (res) {
+                                    resolve(res);
+                                }
+                                else {
+                                    reject();
+                                }
+                            });
+                        });
+                    },
+                    getSafeAreaInsets() {
+                        return new Promise((resolve, reject) => {
+                            bridge.callHandler("getSafeAreaInsets", (res) => {
+                                resolve(res);
+                            });
+                        });
+                    },
+                    alert(cfg) {
+                        return new Promise((resolve, reject) => {
+                            bridge.callHandler("alert", {
+                                config: JSON.stringify(cfg)
+                            }, (res) => {
+                                if (res)
+                                    resolve(res);
+                                else
+                                    reject();
+                            });
+                        });
+                    },
+                    shortShake() {
+                        bridge.callHandler("shortShake");
+                    }
                 };
                 resolve();
             });

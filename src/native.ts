@@ -1,8 +1,28 @@
 type HUDType = "success" | "error" | "progress" | "label"
+interface SafeAreaInsets {
+  top: number
+  left: number
+  right: number
+  bottom: number
+}
+
+interface AlertAction {
+  title?: String
+  style?: "cancel" | "destructive"
+  key: String // callback arg
+}
+
+interface AlertConfig {
+  title?: String
+  message?: String
+  preferredStyle?: "alert" | "actionSheet"
+  actions: AlertAction[]
+}
 
 interface NativeMethods {
   // navigate
   closeApp(): Promise<Boolean>;
+  showAppDetail(): Promise<Boolean>;
   navigateTo(page: String, title?: String): Promise<Boolean>;
   openWeb(url: String): Promise<Boolean>;
   playVideo(url: String): Promise<Boolean>;
@@ -10,8 +30,10 @@ interface NativeMethods {
   writeFile(filename: String, data: Number[]): Promise<Boolean>;
   readFile(filename: String): Promise<Number[]>;
   listFiles(path: String): Promise<String[]>;
-  // hud
+  // notification
   HUD(type: HUDType, title?: String, subTitle?: String, delay?: Number): Promise<Boolean>;
+  alert(config: AlertConfig): Promise<String | null | undefined>;
+  shortShake(): void;
   // preview
   previewImage(url: String): Promise<Boolean>;
   // memory tmp store
@@ -27,6 +49,9 @@ interface NativeMethods {
   disableRefreshControl(): Promise<Boolean>;
   startRefresh(): Promise<Boolean>;
   endRefresh(): Promise<Boolean>;
+  getSafeAreaInsets(): Promise<SafeAreaInsets>
+  // test
+  selectPhoto(): Promise<String[]>
 }
 
 declare interface Window {
@@ -70,6 +95,17 @@ window.InitMinipNative = function (): Promise<void> {
           closeApp() {
             return new Promise<Boolean>((resolve, reject) => {
               bridge.callHandler("close", null, (res: Boolean) => {
+                if (res) {
+                  resolve(res)
+                } else {
+                  reject()
+                }
+              })
+            })
+          },
+          showAppDetail() {
+            return new Promise<Boolean>((resolve, reject) => {
+              bridge.callHandler("showAppDetail", null, (res: Boolean) => {
                 if (res) {
                   resolve(res)
                 } else {
@@ -231,7 +267,6 @@ window.InitMinipNative = function (): Promise<void> {
               })
             })
           },
-
           setKVStore(key, val) {
             return new Promise<Boolean>((resolve, reject) => {
               bridge.callHandler("setKVStore", {
@@ -272,7 +307,6 @@ window.InitMinipNative = function (): Promise<void> {
               })
             })
           },
-
           enableRefreshControl() {
             return new Promise<Boolean>((resolve, reject) => {
               bridge.callHandler("enableRefreshControl", (res: Boolean) => {
@@ -317,6 +351,39 @@ window.InitMinipNative = function (): Promise<void> {
               })
             })
           },
+          selectPhoto() {
+            return new Promise<String[]>((resolve, reject) => {
+              bridge.callHandler("selectPhoto", (res: String[]) => {
+                if (res) {
+                  resolve(res)
+                } else {
+                  reject()
+                }
+              })
+            })
+          },
+          getSafeAreaInsets() {
+            return new Promise<SafeAreaInsets>((resolve, reject) => {
+              bridge.callHandler("getSafeAreaInsets", (res: SafeAreaInsets) => {
+                resolve(res)
+              })
+            })
+          },
+          alert(cfg) {
+            return new Promise<String | null | undefined>((resolve, reject) => {
+              bridge.callHandler("alert", {
+                config: JSON.stringify(cfg)
+              }, (res: String | null | undefined) => {
+                if (res)
+                  resolve(res)
+                else
+                  reject()
+              })
+            })
+          },
+          shortShake() {
+            bridge.callHandler("shortShake")
+          }
         }
 
         resolve()
