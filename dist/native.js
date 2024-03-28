@@ -1,5 +1,5 @@
 "use strict";
-window.InitMinipNative = function () {
+window.InitMinipNative = function (devServerApiUrl) {
     return new Promise((resolve, reject) => {
         // setup
         function setupWKWebViewJavascriptBridge(callback) {
@@ -14,14 +14,54 @@ window.InitMinipNative = function () {
                 window.webkit.messageHandlers.iOS_Native_InjectJavascript.postMessage(null);
             }
             catch (_a) {
-                // pywebview
-                window.addEventListener('pywebviewready', function () {
-                    callback({
-                        callHandler(apiName, params, call) {
-                            window.pywebview.api[apiName](params)
-                                .then((res) => call(res));
+                // dev server
+                let url = "http://127.0.0.1:5000/minip-native-api";
+                if (devServerApiUrl) {
+                    url = devServerApiUrl;
+                }
+                const originFetch = fetch;
+                window.fetch = function (input, init) {
+                    return originFetch(url, {
+                        method: "POST",
+                        body: JSON.stringify({
+                            apiName: "_fetch",
+                            params: {
+                                input,
+                                init
+                            }
+                        }),
+                        headers: {
+                            "content-type": "application/json"
                         }
                     });
+                };
+                callback({
+                    callHandler(apiName, params, call) {
+                        if (params instanceof Function && !call) {
+                            call = params;
+                            params = undefined;
+                        }
+                        originFetch(url, {
+                            method: "POST",
+                            body: JSON.stringify({
+                                apiName,
+                                params
+                            }),
+                            headers: {
+                                "content-type": "application/json"
+                            }
+                        })
+                            .then(res => res.json())
+                            .then(res => {
+                            if (res.result && call) {
+                                call(res.result);
+                            }
+                            if (res.code && call) {
+                                const r = eval(res.code);
+                                call(r);
+                            }
+                        });
+                    }
                 });
             }
         }

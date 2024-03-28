@@ -56,7 +56,7 @@ interface NativeMethods {
 
 declare interface Window {
   MinipNative: NativeMethods;
-  InitMinipNative: () => Promise<void>;
+  InitMinipNative: (devServerApiUrl: String | undefined) => Promise<void>;
   WKWebViewJavascriptBridge: any;
   WKWVJBCallbacks: any;
   webkit: any;
@@ -67,7 +67,7 @@ interface Bridge {
   callHandler(methodName: String, data?: any, callback?: any): void;
 }
 
-window.InitMinipNative = function (): Promise<void> {
+window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     // setup
     function setupWKWebViewJavascriptBridge(callback: any) {
@@ -77,14 +77,56 @@ window.InitMinipNative = function (): Promise<void> {
         window.WKWVJBCallbacks = [callback];
         window.webkit.messageHandlers.iOS_Native_InjectJavascript.postMessage(null)
       } catch {
-        // pywebview
-        window.addEventListener('pywebviewready', function () {
-          callback({
-            callHandler(apiName: any, params: any, call: any) {
-              window.pywebview.api[apiName](params)
-                .then((res: any) => call(res))
+        // dev server
+
+        let url = "http://127.0.0.1:5000/minip-native-api"
+        if (devServerApiUrl) {
+          url = devServerApiUrl as string
+        }
+
+        const originFetch = fetch
+        window.fetch = function (input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+          return originFetch(url, {
+            method: "POST",
+            body: JSON.stringify({
+              apiName: "_fetch",
+              params: {
+                input,
+                init
+              }
+            }),
+            headers: {
+              "content-type": "application/json"
             }
           })
+        }
+        callback({
+          callHandler(apiName: any, params: any, call: any) {
+            if (params instanceof Function && !call) {
+              call = params
+              params = undefined
+            }
+            originFetch(url, {
+              method: "POST",
+              body: JSON.stringify({
+                apiName,
+                params
+              }),
+              headers: {
+                "content-type": "application/json"
+              }
+            })
+              .then(res => res.json())
+              .then(res => {
+                if (res.result && call) {
+                  call(res.result)
+                }
+                if (res.code && call) {
+                  const r = eval(res.code)
+                  call(r)
+                }
+              })
+          }
         })
       }
     }

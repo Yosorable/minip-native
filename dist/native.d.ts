@@ -44,7 +44,7 @@ interface NativeMethods {
 }
 declare interface Window {
     MinipNative: NativeMethods;
-    InitMinipNative: () => Promise<void>;
+    InitMinipNative: (devServerApiUrl: String | undefined) => Promise<void>;
     WKWebViewJavascriptBridge: any;
     WKWVJBCallbacks: any;
     webkit: any;
