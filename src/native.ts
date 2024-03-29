@@ -40,7 +40,7 @@ interface NativeMethods {
   setMemStore(key: String, val: String): Promise<Boolean>;
   getMemStore(key: String): Promise<String>;
   delMemStore(key: String): Promise<Boolean>;
-  // present data (lmdb)
+  // persistent data (lmdb)
   setKVStore(key: String, val: String): Promise<Boolean>;
   getKVStore(key: String): Promise<String>;
   delKVStore(key: String): Promise<Boolean>;
@@ -49,9 +49,11 @@ interface NativeMethods {
   disableRefreshControl(): Promise<Boolean>;
   startRefresh(): Promise<Boolean>;
   endRefresh(): Promise<Boolean>;
-  getSafeAreaInsets(): Promise<SafeAreaInsets>
   // test
   selectPhoto(): Promise<String[]>
+  // device
+  getSafeAreaInsets(): Promise<SafeAreaInsets>
+  localAuthentication(): Promise<Boolean>
 }
 
 declare interface Window {
@@ -122,8 +124,7 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
                   call(res.result)
                 }
                 if (res.code && call) {
-                  const r = eval(res.code)
-                  call(r)
+                  eval(res.code)
                 }
               })
           }
@@ -150,7 +151,7 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
               bridge.callHandler("showAppDetail", null, (res: Boolean) => {
                 if (res) {
                   resolve(res)
-                } else {
+                } else if (reject) {
                   reject()
                 }
               })
@@ -164,7 +165,7 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
               }, (res: Boolean) => {
                 if (res) {
                   resolve(res)
-                } else {
+                } else if (reject) {
                   reject()
                 }
               })
@@ -177,7 +178,7 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
               }, (res: Boolean) => {
                 if (res) {
                   resolve(res)
-                } else {
+                } else if (reject) {
                   reject()
                 }
               })
@@ -190,7 +191,7 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
               }, (res: Boolean) => {
                 if (res) {
                   resolve(res)
-                } else {
+                } else if (reject) {
                   reject()
                 }
               })
@@ -204,7 +205,7 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
               }, (res: Boolean) => {
                 if (res) {
                   resolve(res)
-                } else {
+                } else if (reject) {
                   reject()
                 }
               })
@@ -217,7 +218,7 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
               }, (res: Number[]) => {
                 if (res) {
                   resolve(res)
-                } else {
+                } else if (reject) {
                   reject()
                 }
               })
@@ -230,7 +231,7 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
               }, (res: String[]) => {
                 if (res) {
                   resolve(res)
-                } else {
+                } else if (reject) {
                   reject()
                 }
               })
@@ -247,7 +248,7 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
               }, (res: Boolean) => {
                 if (res) {
                   resolve(res)
-                } else {
+                } else if (reject) {
                   reject()
                 }
               })
@@ -261,7 +262,7 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
               }, (res: Boolean) => {
                 if (res) {
                   resolve(res)
-                } else {
+                } else if (reject) {
                   reject()
                 }
               })
@@ -276,7 +277,7 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
               }, (res: Boolean) => {
                 if (res) {
                   resolve(res)
-                } else {
+                } else if (reject) {
                   reject()
                 }
               })
@@ -290,7 +291,7 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
               }, (res?: String) => {
                 if (res) {
                   resolve(res)
-                } else {
+                } else if (reject) {
                   reject()
                 }
               })
@@ -303,7 +304,7 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
               }, (res: Boolean) => {
                 if (res) {
                   resolve(res)
-                } else {
+                } else if (reject) {
                   reject()
                 }
               })
@@ -317,7 +318,7 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
               }, (res: Boolean) => {
                 if (res) {
                   resolve(res)
-                } else {
+                } else if (reject) {
                   reject()
                 }
               })
@@ -330,7 +331,7 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
               }, (res?: String) => {
                 if (res) {
                   resolve(res)
-                } else {
+                } else if (reject) {
                   reject()
                 }
               })
@@ -343,7 +344,7 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
               }, (res: Boolean) => {
                 if (res) {
                   resolve(res)
-                } else {
+                } else if (reject) {
                   reject()
                 }
               })
@@ -354,7 +355,7 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
               bridge.callHandler("enableRefreshControl", (res: Boolean) => {
                 if (res) {
                   resolve(res)
-                } else {
+                } else if (reject) {
                   reject()
                 }
               })
@@ -365,7 +366,7 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
               bridge.callHandler("disableRefreshControl", (res: Boolean) => {
                 if (res) {
                   resolve(res)
-                } else {
+                } else if (reject) {
                   reject()
                 }
               })
@@ -376,7 +377,7 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
               bridge.callHandler("startRefresh", (res: Boolean) => {
                 if (res) {
                   resolve(res)
-                } else {
+                } else if (reject) {
                   reject()
                 }
               })
@@ -387,7 +388,7 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
               bridge.callHandler("endRefresh", (res: Boolean) => {
                 if (res) {
                   resolve(res)
-                } else {
+                } else if (reject) {
                   reject()
                 }
               })
@@ -398,7 +399,7 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
               bridge.callHandler("selectPhoto", (res: String[]) => {
                 if (res) {
                   resolve(res)
-                } else {
+                } else if (reject) {
                   reject()
                 }
               })
@@ -418,13 +419,24 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
               }, (res: String | null | undefined) => {
                 if (res)
                   resolve(res)
-                else
+                else if (reject)
                   reject()
               })
             })
           },
           shortShake() {
             bridge.callHandler("shortShake")
+          },
+          localAuthentication() {
+            return new Promise<Boolean>((resolve, reject) => {
+              bridge.callHandler("localAuthentication", null,
+                (res: Boolean) => {
+                  if (res === true || res === false)
+                    resolve(res)
+                  else if (reject)
+                    reject()
+                })
+            })
           }
         }
 

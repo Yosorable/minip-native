@@ -39,8 +39,9 @@ interface NativeMethods {
     disableRefreshControl(): Promise<Boolean>;
     startRefresh(): Promise<Boolean>;
     endRefresh(): Promise<Boolean>;
-    getSafeAreaInsets(): Promise<SafeAreaInsets>;
     selectPhoto(): Promise<String[]>;
+    getSafeAreaInsets(): Promise<SafeAreaInsets>;
+    localAuthentication(): Promise<Boolean>;
 }
 declare interface Window {
     MinipNative: NativeMethods;
