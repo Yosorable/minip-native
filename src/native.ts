@@ -19,13 +19,18 @@ interface AlertConfig {
   actions: AlertAction[]
 }
 
+interface SetObservableDataConfig {
+  key: String,
+  initValue?: String
+}
+
 interface NativeMethods {
   // navigate
   closeApp(): Promise<Boolean>;
   showAppDetail(): Promise<Boolean>;
   navigateTo(page: String, title?: String): Promise<Boolean>;
   openWeb(url: String): Promise<Boolean>;
-  playVideo(url: String): Promise<Boolean>;
+  navigateBack(): void;
   // file
   writeFile(filename: String, data: Number[]): Promise<Boolean>;
   readFile(filename: String): Promise<Number[]>;
@@ -34,8 +39,10 @@ interface NativeMethods {
   HUD(type: HUDType, title?: String, subTitle?: String, delay?: Number): Promise<Boolean>;
   alert(config: AlertConfig): Promise<String | null | undefined>;
   shortShake(): void;
-  // preview
+  // media
   previewImage(url: String): Promise<Boolean>;
+  playVideo(url: String): Promise<Boolean>;
+  selectPhoto(): Promise<String[]>;
   // memory tmp store
   setMemStore(key: String, val: String): Promise<Boolean>;
   getMemStore(key: String): Promise<String>;
@@ -44,16 +51,15 @@ interface NativeMethods {
   setKVStore(key: String, val: String): Promise<Boolean>;
   getKVStore(key: String): Promise<String>;
   delKVStore(key: String): Promise<Boolean>;
+  setObservableData(config: SetObservableDataConfig): Promise<String>; // data observer `window.addEventListener("observedDataChanged", e => setData(e.detail.key, e.detail.value))`
   // refresh control
   enableRefreshControl(): Promise<Boolean>;
   disableRefreshControl(): Promise<Boolean>;
   startRefresh(): Promise<Boolean>;
   endRefresh(): Promise<Boolean>;
-  // test
-  selectPhoto(): Promise<String[]>
   // device
-  getSafeAreaInsets(): Promise<SafeAreaInsets>
-  localAuthentication(): Promise<Boolean>
+  getSafeAreaInsets(): Promise<SafeAreaInsets>;
+  localAuthentication(): Promise<Boolean>;
 }
 
 declare interface Window {
@@ -123,9 +129,6 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
                 if (res.result && call) {
                   call(res.result)
                 }
-                if (res.code && call) {
-                  eval(res.code)
-                }
               })
           }
         })
@@ -170,6 +173,9 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
                 }
               })
             })
+          },
+          navigateBack() {
+            bridge.callHandler("navigateBack")
           },
           openWeb(url) {
             return new Promise<Boolean>((resolve, reject) => {
@@ -435,6 +441,14 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
                     resolve(res)
                   else if (reject)
                     reject()
+                })
+            })
+          },
+          setObservableData(config) {
+            return new Promise<String>((resolve) => {
+              bridge.callHandler("setObservableData", config,
+                (res: String) => {
+                  resolve(res)
                 })
             })
           }

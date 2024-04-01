@@ -56,9 +56,6 @@ window.InitMinipNative = function (devServerApiUrl) {
                             if (res.result && call) {
                                 call(res.result);
                             }
-                            if (res.code && call) {
-                                eval(res.code);
-                            }
                         });
                     }
                 });
@@ -105,6 +102,9 @@ window.InitMinipNative = function (devServerApiUrl) {
                                 }
                             });
                         });
+                    },
+                    navigateBack() {
+                        bridge.callHandler("navigateBack");
                     },
                     openWeb(url) {
                         return new Promise((resolve, reject) => {
@@ -383,6 +383,13 @@ window.InitMinipNative = function (devServerApiUrl) {
                                     resolve(res);
                                 else if (reject)
                                     reject();
+                            });
+                        });
+                    },
+                    setObservableData(config) {
+                        return new Promise((resolve) => {
+                            bridge.callHandler("setObservableData", config, (res) => {
+                                resolve(res);
                             });
                         });
                     }
