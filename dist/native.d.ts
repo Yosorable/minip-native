@@ -6,57 +6,56 @@ interface SafeAreaInsets {
     bottom: number;
 }
 interface AlertAction {
-    title?: String;
+    title?: string;
     style?: "cancel" | "destructive";
-    key: String;
+    key: string;
 }
 interface AlertConfig {
-    title?: String;
-    message?: String;
+    title?: string;
+    message?: string;
     preferredStyle?: "alert" | "actionSheet";
     actions: AlertAction[];
 }
 interface SetObservableDataConfig {
-    key: String;
-    initValue?: String;
+    key: string;
+    initValue?: string;
 }
 interface NativeMethods {
-    closeApp(): Promise<Boolean>;
-    showAppDetail(): Promise<Boolean>;
-    navigateTo(page: String, title?: String): Promise<Boolean>;
-    openWeb(url: String): Promise<Boolean>;
+    closeApp(): Promise<boolean>;
+    showAppDetail(): Promise<boolean>;
+    navigateTo(page: string, title?: string): Promise<boolean>;
+    openWeb(url: string): Promise<boolean>;
     navigateBack(): void;
-    writeFile(filename: String, data: Number[]): Promise<Boolean>;
-    readFile(filename: String): Promise<Number[]>;
-    listFiles(path: String): Promise<String[]>;
-    HUD(type: HUDType, title?: String, subTitle?: String, delay?: Number): Promise<Boolean>;
-    alert(config: AlertConfig): Promise<String | null | undefined>;
+    writeFile(filename: string, data: number[]): Promise<boolean>;
+    readFile(filename: string): Promise<number[]>;
+    listFiles(path: string): Promise<string[]>;
+    HUD(type: HUDType, title?: string, subTitle?: string, delay?: number): Promise<boolean>;
+    alert(config: AlertConfig): Promise<string | null | undefined>;
     shortShake(): void;
-    previewImage(url: String): Promise<Boolean>;
-    playVideo(url: String): Promise<Boolean>;
-    selectPhoto(): Promise<String[]>;
-    setMemStore(key: String, val: String): Promise<Boolean>;
-    getMemStore(key: String): Promise<String>;
-    delMemStore(key: String): Promise<Boolean>;
-    setKVStore(key: String, val: String): Promise<Boolean>;
-    getKVStore(key: String): Promise<String>;
-    delKVStore(key: String): Promise<Boolean>;
-    setObservableData(config: SetObservableDataConfig): Promise<String>;
-    enableRefreshControl(): Promise<Boolean>;
-    disableRefreshControl(): Promise<Boolean>;
-    startRefresh(): Promise<Boolean>;
-    endRefresh(): Promise<Boolean>;
+    previewImage(url: string): Promise<boolean>;
+    playVideo(url: string): Promise<boolean>;
+    selectPhoto(): Promise<string[]>;
+    setMemStore(key: string, val: string): Promise<boolean>;
+    getMemStore(key: string): Promise<string>;
+    delMemStore(key: string): Promise<boolean>;
+    setKVStore(key: string, val: string): Promise<boolean>;
+    getKVStore(key: string): Promise<string>;
+    delKVStore(key: string): Promise<boolean>;
+    setObservableData(config: SetObservableDataConfig): Promise<string>;
+    enableRefreshControl(): Promise<boolean>;
+    disableRefreshControl(): Promise<boolean>;
+    startRefresh(): Promise<boolean>;
+    endRefresh(): Promise<boolean>;
     getSafeAreaInsets(): Promise<SafeAreaInsets>;
-    localAuthentication(): Promise<Boolean>;
+    localAuthentication(): Promise<boolean>;
 }
 declare interface Window {
     MinipNative: NativeMethods;
-    InitMinipNative: (devServerApiUrl: String | undefined) => Promise<void>;
+    InitMinipNative: (devServerApiUrl: string | undefined) => Promise<void>;
     WKWebViewJavascriptBridge: any;
     WKWVJBCallbacks: any;
     webkit: any;
-    pywebview: any;
 }
 interface Bridge {
-    callHandler(methodName: String, data?: any, callback?: any): void;
+    callHandler(methodName: string, data?: any, callback?: any): void;
 }

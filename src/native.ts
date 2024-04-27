@@ -7,75 +7,74 @@ interface SafeAreaInsets {
 }
 
 interface AlertAction {
-  title?: String
+  title?: string
   style?: "cancel" | "destructive"
-  key: String // callback arg
+  key: string // callback arg
 }
 
 interface AlertConfig {
-  title?: String
-  message?: String
+  title?: string
+  message?: string
   preferredStyle?: "alert" | "actionSheet"
   actions: AlertAction[]
 }
 
 interface SetObservableDataConfig {
-  key: String,
-  initValue?: String
+  key: string,
+  initValue?: string
 }
 
 interface NativeMethods {
   // navigate
-  closeApp(): Promise<Boolean>;
-  showAppDetail(): Promise<Boolean>;
-  navigateTo(page: String, title?: String): Promise<Boolean>;
-  openWeb(url: String): Promise<Boolean>;
+  closeApp(): Promise<boolean>;
+  showAppDetail(): Promise<boolean>;
+  navigateTo(page: string, title?: string): Promise<boolean>;
+  openWeb(url: string): Promise<boolean>;
   navigateBack(): void;
   // file
-  writeFile(filename: String, data: Number[]): Promise<Boolean>;
-  readFile(filename: String): Promise<Number[]>;
-  listFiles(path: String): Promise<String[]>;
+  writeFile(filename: string, data: number[]): Promise<boolean>;
+  readFile(filename: string): Promise<number[]>;
+  listFiles(path: string): Promise<string[]>;
   // notification
-  HUD(type: HUDType, title?: String, subTitle?: String, delay?: Number): Promise<Boolean>;
-  alert(config: AlertConfig): Promise<String | null | undefined>;
+  HUD(type: HUDType, title?: string, subTitle?: string, delay?: number): Promise<boolean>;
+  alert(config: AlertConfig): Promise<string | null | undefined>;
   shortShake(): void;
   // media
-  previewImage(url: String): Promise<Boolean>;
-  playVideo(url: String): Promise<Boolean>;
-  selectPhoto(): Promise<String[]>;
+  previewImage(url: string): Promise<boolean>;
+  playVideo(url: string): Promise<boolean>;
+  selectPhoto(): Promise<string[]>;
   // memory tmp store
-  setMemStore(key: String, val: String): Promise<Boolean>;
-  getMemStore(key: String): Promise<String>;
-  delMemStore(key: String): Promise<Boolean>;
+  setMemStore(key: string, val: string): Promise<boolean>;
+  getMemStore(key: string): Promise<string>;
+  delMemStore(key: string): Promise<boolean>;
   // persistent data (lmdb)
-  setKVStore(key: String, val: String): Promise<Boolean>;
-  getKVStore(key: String): Promise<String>;
-  delKVStore(key: String): Promise<Boolean>;
-  setObservableData(config: SetObservableDataConfig): Promise<String>; // data observer `window.addEventListener("observedDataChanged", e => setData(e.detail.key, e.detail.value))`
+  setKVStore(key: string, val: string): Promise<boolean>;
+  getKVStore(key: string): Promise<string>;
+  delKVStore(key: string): Promise<boolean>;
+  setObservableData(config: SetObservableDataConfig): Promise<string>; // data observer `window.addEventListener("observedDataChanged", e => setData(e.detail.key, e.detail.value))`
   // refresh control
-  enableRefreshControl(): Promise<Boolean>;
-  disableRefreshControl(): Promise<Boolean>;
-  startRefresh(): Promise<Boolean>;
-  endRefresh(): Promise<Boolean>;
+  enableRefreshControl(): Promise<boolean>;
+  disableRefreshControl(): Promise<boolean>;
+  startRefresh(): Promise<boolean>;
+  endRefresh(): Promise<boolean>;
   // device
   getSafeAreaInsets(): Promise<SafeAreaInsets>;
-  localAuthentication(): Promise<Boolean>;
+  localAuthentication(): Promise<boolean>;
 }
 
 declare interface Window {
   MinipNative: NativeMethods;
-  InitMinipNative: (devServerApiUrl: String | undefined) => Promise<void>;
+  InitMinipNative: (devServerApiUrl: string | undefined) => Promise<void>;
   WKWebViewJavascriptBridge: any;
   WKWVJBCallbacks: any;
   webkit: any;
-  pywebview: any;
 }
 
 interface Bridge {
-  callHandler(methodName: String, data?: any, callback?: any): void;
+  callHandler(methodName: string, data?: any, callback?: any): void;
 }
 
-window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise<void> {
+window.InitMinipNative = function (devServerApiUrl: string | undefined): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     // setup
     function setupWKWebViewJavascriptBridge(callback: any) {
@@ -139,8 +138,8 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
       setupWKWebViewJavascriptBridge(function (bridge: Bridge) {
         window.MinipNative = window.MinipNative || {
           closeApp() {
-            return new Promise<Boolean>((resolve, reject) => {
-              bridge.callHandler("close", null, (res: Boolean) => {
+            return new Promise<boolean>((resolve, reject) => {
+              bridge.callHandler("close", null, (res: boolean) => {
                 if (res) {
                   resolve(res)
                 } else {
@@ -150,8 +149,8 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
             })
           },
           showAppDetail() {
-            return new Promise<Boolean>((resolve, reject) => {
-              bridge.callHandler("showAppDetail", null, (res: Boolean) => {
+            return new Promise<boolean>((resolve, reject) => {
+              bridge.callHandler("showAppDetail", null, (res: boolean) => {
                 if (res) {
                   resolve(res)
                 } else if (reject) {
@@ -161,11 +160,11 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
             })
           },
           navigateTo(page, title) {
-            return new Promise<Boolean>((resolve, reject) => {
+            return new Promise<boolean>((resolve, reject) => {
               bridge.callHandler("navigateTo", {
                 page,
                 title
-              }, (res: Boolean) => {
+              }, (res: boolean) => {
                 if (res) {
                   resolve(res)
                 } else if (reject) {
@@ -178,10 +177,10 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
             bridge.callHandler("navigateBack")
           },
           openWeb(url) {
-            return new Promise<Boolean>((resolve, reject) => {
+            return new Promise<boolean>((resolve, reject) => {
               bridge.callHandler("openWeb", {
                 url
-              }, (res: Boolean) => {
+              }, (res: boolean) => {
                 if (res) {
                   resolve(res)
                 } else if (reject) {
@@ -191,10 +190,10 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
             })
           },
           playVideo(url) {
-            return new Promise<Boolean>((resolve, reject) => {
+            return new Promise<boolean>((resolve, reject) => {
               bridge.callHandler("playVideo", {
                 url
-              }, (res: Boolean) => {
+              }, (res: boolean) => {
                 if (res) {
                   resolve(res)
                 } else if (reject) {
@@ -204,11 +203,11 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
             })
           },
           writeFile(filename, data) {
-            return new Promise<Boolean>((resolve, reject) => {
+            return new Promise<boolean>((resolve, reject) => {
               bridge.callHandler("writeFile", {
                 filename,
                 data
-              }, (res: Boolean) => {
+              }, (res: boolean) => {
                 if (res) {
                   resolve(res)
                 } else if (reject) {
@@ -218,10 +217,10 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
             })
           },
           readFile(filename) {
-            return new Promise<Number[]>((resolve, reject) => {
+            return new Promise<number[]>((resolve, reject) => {
               bridge.callHandler("readFile", {
                 filename
-              }, (res: Number[]) => {
+              }, (res: number[]) => {
                 if (res) {
                   resolve(res)
                 } else if (reject) {
@@ -231,10 +230,10 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
             })
           },
           listFiles(path) {
-            return new Promise<String[]>((resolve, reject) => {
+            return new Promise<string[]>((resolve, reject) => {
               bridge.callHandler("listFiles", {
                 path
-              }, (res: String[]) => {
+              }, (res: string[]) => {
                 if (res) {
                   resolve(res)
                 } else if (reject) {
@@ -245,13 +244,13 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
           },
 
           HUD(type, title, subTitle, delay) {
-            return new Promise<Boolean>((resolve, reject) => {
+            return new Promise<boolean>((resolve, reject) => {
               bridge.callHandler("HUD", {
                 type,
                 title,
                 subTitle,
                 delay
-              }, (res: Boolean) => {
+              }, (res: boolean) => {
                 if (res) {
                   resolve(res)
                 } else if (reject) {
@@ -262,10 +261,10 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
           },
 
           previewImage(url) {
-            return new Promise<Boolean>((resolve, reject) => {
+            return new Promise<boolean>((resolve, reject) => {
               bridge.callHandler("previewImage", {
                 url
-              }, (res: Boolean) => {
+              }, (res: boolean) => {
                 if (res) {
                   resolve(res)
                 } else if (reject) {
@@ -276,11 +275,11 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
           },
 
           setMemStore(key, val) {
-            return new Promise<Boolean>((resolve, reject) => {
+            return new Promise<boolean>((resolve, reject) => {
               bridge.callHandler("setMemStore", {
                 key,
                 val
-              }, (res: Boolean) => {
+              }, (res: boolean) => {
                 if (res) {
                   resolve(res)
                 } else if (reject) {
@@ -291,10 +290,10 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
 
           },
           getMemStore(key) {
-            return new Promise<String>((resolve, reject) => {
+            return new Promise<string>((resolve, reject) => {
               bridge.callHandler("getMemStore", {
                 key
-              }, (res?: String) => {
+              }, (res?: string) => {
                 if (res) {
                   resolve(res)
                 } else if (reject) {
@@ -304,10 +303,10 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
             })
           },
           delMemStore(key) {
-            return new Promise<Boolean>((resolve, reject) => {
+            return new Promise<boolean>((resolve, reject) => {
               bridge.callHandler("delMemStore", {
                 key
-              }, (res: Boolean) => {
+              }, (res: boolean) => {
                 if (res) {
                   resolve(res)
                 } else if (reject) {
@@ -317,11 +316,11 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
             })
           },
           setKVStore(key, val) {
-            return new Promise<Boolean>((resolve, reject) => {
+            return new Promise<boolean>((resolve, reject) => {
               bridge.callHandler("setKVStore", {
                 key,
                 val
-              }, (res: Boolean) => {
+              }, (res: boolean) => {
                 if (res) {
                   resolve(res)
                 } else if (reject) {
@@ -331,10 +330,10 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
             })
           },
           getKVStore(key) {
-            return new Promise<String>((resolve, reject) => {
+            return new Promise<string>((resolve, reject) => {
               bridge.callHandler("getKVStore", {
                 key
-              }, (res?: String) => {
+              }, (res?: string) => {
                 if (res) {
                   resolve(res)
                 } else if (reject) {
@@ -344,10 +343,10 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
             })
           },
           delKVStore(key) {
-            return new Promise<Boolean>((resolve, reject) => {
+            return new Promise<boolean>((resolve, reject) => {
               bridge.callHandler("delKVStore", {
                 key
-              }, (res: Boolean) => {
+              }, (res: boolean) => {
                 if (res) {
                   resolve(res)
                 } else if (reject) {
@@ -357,8 +356,8 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
             })
           },
           enableRefreshControl() {
-            return new Promise<Boolean>((resolve, reject) => {
-              bridge.callHandler("enableRefreshControl", (res: Boolean) => {
+            return new Promise<boolean>((resolve, reject) => {
+              bridge.callHandler("enableRefreshControl", (res: boolean) => {
                 if (res) {
                   resolve(res)
                 } else if (reject) {
@@ -368,8 +367,8 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
             })
           },
           disableRefreshControl() {
-            return new Promise<Boolean>((resolve, reject) => {
-              bridge.callHandler("disableRefreshControl", (res: Boolean) => {
+            return new Promise<boolean>((resolve, reject) => {
+              bridge.callHandler("disableRefreshControl", (res: boolean) => {
                 if (res) {
                   resolve(res)
                 } else if (reject) {
@@ -379,8 +378,8 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
             })
           },
           startRefresh() {
-            return new Promise<Boolean>((resolve, reject) => {
-              bridge.callHandler("startRefresh", (res: Boolean) => {
+            return new Promise<boolean>((resolve, reject) => {
+              bridge.callHandler("startRefresh", (res: boolean) => {
                 if (res) {
                   resolve(res)
                 } else if (reject) {
@@ -390,8 +389,8 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
             })
           },
           endRefresh() {
-            return new Promise<Boolean>((resolve, reject) => {
-              bridge.callHandler("endRefresh", (res: Boolean) => {
+            return new Promise<boolean>((resolve, reject) => {
+              bridge.callHandler("endRefresh", (res: boolean) => {
                 if (res) {
                   resolve(res)
                 } else if (reject) {
@@ -401,8 +400,8 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
             })
           },
           selectPhoto() {
-            return new Promise<String[]>((resolve, reject) => {
-              bridge.callHandler("selectPhoto", (res: String[]) => {
+            return new Promise<string[]>((resolve, reject) => {
+              bridge.callHandler("selectPhoto", (res: string[]) => {
                 if (res) {
                   resolve(res)
                 } else if (reject) {
@@ -419,10 +418,10 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
             })
           },
           alert(cfg) {
-            return new Promise<String | null | undefined>((resolve, reject) => {
+            return new Promise<string | null | undefined>((resolve, reject) => {
               bridge.callHandler("alert", {
                 config: JSON.stringify(cfg)
-              }, (res: String | null | undefined) => {
+              }, (res: string | null | undefined) => {
                 if (res)
                   resolve(res)
                 else if (reject)
@@ -434,9 +433,9 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
             bridge.callHandler("shortShake")
           },
           localAuthentication() {
-            return new Promise<Boolean>((resolve, reject) => {
+            return new Promise<boolean>((resolve, reject) => {
               bridge.callHandler("localAuthentication", null,
-                (res: Boolean) => {
+                (res: boolean) => {
                   if (res === true || res === false)
                     resolve(res)
                   else if (reject)
@@ -445,9 +444,9 @@ window.InitMinipNative = function (devServerApiUrl: String | undefined): Promise
             })
           },
           setObservableData(config) {
-            return new Promise<String>((resolve) => {
+            return new Promise<string>((resolve) => {
               bridge.callHandler("setObservableData", config,
-                (res: String) => {
+                (res: string) => {
                   resolve(res)
                 })
             })
